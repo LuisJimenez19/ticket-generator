@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --neutral-0: 0, 0%, 100%;
+  --neutral-300: 252, 6%, 83%;
+  --neutral-500: 245, 15%, 58%;
+  --neutral-700: 245, 19%, 35%;
+  --neutral-900: 248, 70%, 10%;
+  --orange-500: 7, 88%, 67%;
+  --orange-700: 7, 71%, 60%;
+  --gradient-text: hsl(7, 86%, 67%) to hsl(0, 0%, 100%);
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+}
+
+body {
+  position: relative;
+  font-family: "Inconsolata", serif !important;
+  background-image: url(./assets/images/background-mobile.png);
+  background-position: left;
+  background-size: cover;
+  background-repeat: no-repeat;
+  
+  
+  min-height: 100dvh;
+
+  .pattern-lines {
+    background-image: url(./assets/images/pattern-lines.svg);
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-clip: border-box;
+    
+  }
+}
+
+
+@media (width > 768px){
+  body{
+    background-image: url(./assets/images/background-desktop.png);
+  }
+}
