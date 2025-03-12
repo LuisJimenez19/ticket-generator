@@ -9,10 +9,11 @@ export default {
       "neutral-7": "hsla(var(--neutral-700))",
       "neutral-9": "hsla(var(--neutral-900))",
       "orange-5": "hsla(var(--orange-500))",
-      "orange-7": "hsla(var(--orange-900))",
+      "orange-7": "hsla(var(--orange-700))",
     },
-    fontFamily:{
-      'inconsolata' : ["inconsolata", "serif"]
+
+    fontFamily: {
+      inconsolata: ["inconsolata", "serif"],
     },
     extend: {},
   },

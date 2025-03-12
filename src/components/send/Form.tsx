@@ -1,6 +1,9 @@
 import iconUpload from "@/assets/images/icon-upload.svg";
 import iconInfo from "@/assets/images/icon-info.svg";
+import iconErrorInfo from "@/assets/images/icon-error-info.svg";
 import { ChangeEvent, useState } from "react";
+import { hashUserName, regexEmail } from "@/helpers/formSendInfo";
+import { useSendContext } from "@/context/SendContext";
 
 interface DataType {
   avatar: null | File;
@@ -10,8 +13,16 @@ interface DataType {
 }
 
 function Form() {
+  const { setGlobalState } = useSendContext();
+
   const [data, setData] = useState<DataType>({
     avatar: null,
+    fullName: "",
+    email: "",
+    gitHubUserName: "",
+  });
+  const [errors, setErrors] = useState({
+    avatar: "",
     fullName: "",
     email: "",
     gitHubUserName: "",
@@ -33,10 +44,12 @@ function Form() {
     if (!files || files.length == 0) return;
 
     const newFile = files[0];
-    console.log(newFile);
-    if (!newFile.type.includes("image")) return alert("Debe ser una imagen");
+
     if (newFile.size > 2000000)
-      return alert("La imagen es muy pesada debe ser de 2MB o menos.");
+      return setErrors({
+        ...errors,
+        avatar: "File too large. Please upload a photo under 500kb",
+      });
 
     const fileReader = new FileReader();
     fileReader.readAsDataURL(newFile);
@@ -57,11 +70,71 @@ function Form() {
     });
     setUrlTempPreview("");
   }
+
+  function validateData() {
+    const newErrors = { ...errors };
+
+    if (!regexEmail.test(data.email))
+      newErrors["email"] = "Please enter a valid email address.";
+    else {
+      newErrors["email"] = "";
+    }
+    if (data.fullName.trim() == "")
+      newErrors["fullName"] = "Please enter a valid GitHub username";
+    else {
+      newErrors["fullName"] = "";
+    }
+
+    if (
+      data.gitHubUserName.trim() == "" ||
+      !data.gitHubUserName.startsWith("@")
+    )
+      newErrors["gitHubUserName"] = "Please enter a valid GitHub username";
+    else {
+      newErrors["gitHubUserName"] = "";
+    }
+
+    if (data.avatar == null) newErrors["avatar"] = "Please upload your avatar";
+    else {
+      newErrors["avatar"] = "";
+    }
+
+    if (Object.values(newErrors).every(err => err.trim() != "")) {
+      setErrors(newErrors);
+      return false;
+    }
+    setErrors({
+      avatar: "",
+      fullName: "",
+      email: "",
+      gitHubUserName: "",
+    })
+    return true;
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!validateData()) return;
+    // Submit form here
+    const dataToTicket = {
+      ...data,
+      avatarUrl: urlTempPreview,
+      tickect: hashUserName(data.gitHubUserName),
+    };
+
+    setGlobalState({
+      success: true,
+      useInfo: dataToTicket,
+    });
+  }
   return (
     <div className="relative">
-      <form className="flex flex-col gap-6 relative max-w-md mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-6 relative max-w-md mx-auto"
+      >
         {/* Avatar */}
-        <div >
+        <div>
           <span className="font-semibold">Uploadd Avatar</span>
           {/* Input upload avatar */}
           <div className="relative border border-dashed bg-neutral-7/50  h-[120px] grid place-content-center w-full mt-3 rounded-xl hover:outline ">
@@ -92,7 +165,11 @@ function Form() {
                     className="p-1 text-[10px] underline bg-neutral-5/50 tracking-wider rounded"
                   >
                     Change image
-                    <input onChange={handleChangeAvatar} type="file" className=" file:hidden absolute inset-0 opacity-0 cursor-pointer " />
+                    <input
+                      onChange={handleChangeAvatar}
+                      type="file"
+                      className=" file:hidden absolute inset-0 opacity-0 cursor-pointer "
+                    />
                   </button>
                 </div>
               </div>
@@ -108,7 +185,7 @@ function Form() {
                   type="file"
                   onChange={handleChangeAvatar}
                   name="avatar"
-                  accept=".jpg, .png"
+                  accept="image/*"
                   id="avatar"
                   disabled={urlTempPreview.length != 0}
                   className=" file:hidden absolute inset-0 opacity-0 cursor-pointer "
@@ -119,8 +196,15 @@ function Form() {
 
           <div className="flex flex-nowrap gap-2 mt-3 ">
             {" "}
-            <img src={iconInfo} alt="" />{" "}
-            <small>Upload your photo (JPG o PNG, max size: 2MB)</small>
+            <img
+              src={errors.avatar ? iconErrorInfo : iconInfo}
+              alt="icon info"
+            />{" "}
+            {errors.avatar ? (
+              <small className="text-orange-5">{errors.avatar}</small>
+            ) : (
+              <small>Upload your photo (JPG o PNG, max size: 2MB)</small>
+            )}
           </div>
         </div>
 
@@ -134,6 +218,12 @@ function Form() {
             onChange={handleChange}
             value={data.fullName}
           />
+          {errors.fullName && (
+            <div className="flex items-center gap-2">
+              <img src={iconErrorInfo} alt="icon info" />{" "}
+              <small className="text-orange-5">{errors.fullName}</small>
+            </div>
+          )}
         </label>
 
         {/* email address */}
@@ -147,6 +237,12 @@ function Form() {
             onChange={handleChange}
             value={data.email}
           />
+          {errors.email && (
+            <div className="flex items-center gap-2">
+              <img src={iconErrorInfo} alt="icon info" />
+              <small className="text-orange-5">{errors.email}</small>
+            </div>
+          )}
         </label>
 
         {/* git hub user name */}
@@ -160,6 +256,12 @@ function Form() {
             onChange={handleChange}
             value={data.gitHubUserName}
           />
+          {errors.gitHubUserName && (
+            <div className="flex items-center gap-2">
+              <img src={iconErrorInfo} alt="icon info" />{" "}
+              <small className="text-orange-5">{errors.gitHubUserName}</small>
+            </div>
+          )}
         </label>
 
         <button className="p-3 w-full bg-orange-5 rounded-xl text-neutral-9 font-bold text-lg hover:outline hover:outline-2 hover:outline-neutral-3 transition-all">

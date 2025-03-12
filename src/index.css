@@ -38,23 +38,38 @@ body {
   background-position: left;
   background-size: cover;
   background-repeat: no-repeat;
-  
-  
+
   min-height: 100dvh;
 
   .pattern-lines {
     background-image: url(./assets/images/pattern-lines.svg);
+    max-height: 45vh;
     background-position: left top;
     background-size: cover;
     background-repeat: no-repeat;
     background-clip: border-box;
-    
   }
 }
 
-
-@media (width > 768px){
-  body{
+@media (width > 768px) {
+  body {
     background-image: url(./assets/images/background-desktop.png);
   }
+}
+
+.gradient-text {
+  background: linear-gradient(to right, var(--gradient-text));
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-transparent {
+  color: transparent;
+}
+
+
+.card-ticket{
+  background-image: url(./assets/images/pattern-ticket.svg);
 }
