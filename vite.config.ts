@@ -10,5 +10,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "https://github.com/LuisJimenez19/ticket-generator/",
+  base: "/ticket-generator/",
 });
