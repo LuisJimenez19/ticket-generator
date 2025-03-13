@@ -1,13 +1,8 @@
+import { UserInfo } from "@/types";
 import { createContext, useContext, useState, PropsWithChildren, Dispatch, SetStateAction } from "react";
 
 
-interface UserInfo {
-  email: string;
-  fullName: string;
-  gitHubUserName: string;
-  avatarUrl: string | null;
-  tickect: string | null;
-}
+
 
 interface GlobalState {
   success: boolean;
@@ -25,7 +20,7 @@ const SendContext = createContext<SendContextType | undefined>(undefined);
 
 function ProviderSendContext({ children }: PropsWithChildren) {
   const [globalState, setGlobalState] = useState<GlobalState>({
-    success: true,
+    success: false,
     userInfo: {
       email: "",
       fullName: "",

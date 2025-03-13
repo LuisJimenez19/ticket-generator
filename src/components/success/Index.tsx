@@ -3,20 +3,20 @@ import Layout from "@/layouts/Layout";
 import { Header } from "../Header";
 import { useSendContext } from "@/context/SendContext";
 
-import patternTicket from "@/assets/images/pattern-ticket.svg";
+import { CardTicket } from "./CardTicket";
 
 function Index() {
-  const { success, userInfo } = useSendContext().globalState;
+  const { userInfo } = useSendContext().globalState;
 
-  const info = /*  success
+  const info = userInfo.avatarUrl
     ? userInfo
-    : */ {
-    avatarUrl: "data:image/webp;base64,UklGRoQjAABXRUJQVlA4WAoAAA",
-    email: "admin@tl300.com",
-    fullName: "Luis Angel",
-    gitHubUserName: "@luisjimenez19",
-    tickect: "37409",
-  };
+    : {
+        avatarUrl: "data:image/webp;base64,UklGRoQjAABXRUJQVlA4WAoAAA",
+        email: "admin@tl300.com",
+        fullName: "Luis Angel",
+        gitHubUserName: "luisjimenez19",
+        tickect: "37409",
+      };
 
   return (
     <Layout>
@@ -38,7 +38,7 @@ function Index() {
           </h3>
         </Header>
         <section>
-          <div className="card-ticket  mx-auto   w-11/12 max-w-[600px] h-[300px] z-50 relative bg-no-repeat bg-contain "></div>
+          <CardTicket userInfo={info} />
         </section>
       </div>
     </Layout>

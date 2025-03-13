@@ -5,8 +5,6 @@ import { useSendContext } from "./context/SendContext";
 function App() {
   const { globalState } = useSendContext();
 
-  console.log(globalState);
-
   return globalState.success ? <Success /> : <Send />;
 }
 

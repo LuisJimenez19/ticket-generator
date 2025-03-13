@@ -124,7 +124,7 @@ function Form() {
 
     setGlobalState({
       success: true,
-      useInfo: dataToTicket,
+      userInfo: dataToTicket,
     });
   }
   return (
